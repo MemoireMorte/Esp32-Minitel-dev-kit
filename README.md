@@ -6,14 +6,10 @@ La carte peut être alimentée directement par le Minitel (pas d'alimentation ex
 
 Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) (même UART, mêmes GPIO 16/17).
 
-## Contenu du dépôt
+## Code
 
-| Chemin | Contenu |
-|---|---|
-| `PCB/minitel esp32.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | Projet KiCad 10 (schéma et routage) |
-| `PCB/Export/` | Gerbers (version traversante `minitel esp32 v1.zip`, version CMS dans `smd/`) |
-| `PCB/jlcpcb/` | Fichiers de fabrication et d'assemblage JLCPCB (Gerbers, BOM, CPL) |
-| `PCB/Boitier haut2.stl`, `PCB/Boitier bas2.stl` | Boîtier à imprimer en 3D (coque haute et basse) |
+- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) — exemples logiciels
+- [MemoireMorte/minitracker](https://github.com/MemoireMorte/minitracker) - séquenceur 6 pistes
 
 ## Vue d'ensemble
 
