@@ -8,7 +8,7 @@ Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel
 
 ## Code
 
-- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) — exemples logiciels
+- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) - exemples logiciels
 - [MemoireMorte/minitracker](https://github.com/MemoireMorte/minitracker) - séquenceur 6 pistes
 
 ## Vue d'ensemble
