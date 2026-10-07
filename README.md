@@ -8,8 +8,9 @@ Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel
 
 ## Code
 
-- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) - exemples logiciels
 - [MemoireMorte/minitracker](https://github.com/MemoireMorte/minitracker) - séquenceur 6 pistes
+- [MemoireMorte/3615-Home-Assistant](https://github.com/MemoireMorte/3615-Home-Assistant) - dashboard Home Assistant
+- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) - exemples logiciels
 
 ## Vue d'ensemble
 
