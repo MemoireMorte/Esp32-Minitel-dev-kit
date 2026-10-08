@@ -22,10 +22,11 @@ Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel
       3 TX  -----|-----------------> GPIO16 (RX2)       |
       4 PT   n.c.|                    ESP32-WROOM-32    |
       5 +V  -----|-- cavalier                           |
-                 |                   GPIO1/3 (UART0) ---|--> J3 programmation (FTDI)
- micro-USB ------|-- cavalier        GPIO0  --- PROG    |
- (alim. seule)   |                   EN     --- RESET   |
-                 +--------------------------------------+
+                 |                   GPIO1/3 (UART0) ---|--> J3 programmation (FTDI) 1:GND
+ micro-USB ------|-- cavalier        GPIO0  --- PROG    |                            2:NC
+ (alim. seule)   |                   EN     --- RESET   |                            3:3.3V
+                 +--------------------------------------+                            4:RX
+                                                                                     5:TX
 ```
 
 ## Pinout
