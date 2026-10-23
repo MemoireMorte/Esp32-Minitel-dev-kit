@@ -1,4 +1,4 @@
-# ESP32 pour Minitel
+# ESP32 Minitel dev kit
 
 Carte à base d'**ESP32-WROOM-32** qui se branche sur la prise péri-informatique (DIN 5 broches) d'un Minitel et l'utilise comme terminal d'entrée/sortie de l'ESP32 : le clavier et l'écran du Minitel deviennent la console d'un microcontrôleur disposant du Wifi et du Bluetooth.
 
