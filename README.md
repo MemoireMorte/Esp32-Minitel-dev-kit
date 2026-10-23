@@ -2,7 +2,8 @@
 
 Carte à base d'**ESP32-WROOM-32** qui se branche sur la prise péri-informatique (DIN 5 broches) d'un Minitel et l'utilise comme terminal d'entrée/sortie de l'ESP32 : le clavier et l'écran du Minitel deviennent la console d'un microcontrôleur disposant du Wifi et du Bluetooth.
 
-La carte peut être alimentée directement par le Minitel (pas d'alimentation externe) ou par un port micro-USB.
+La carte peut être alimentée directement par le Minitel ou par une alimentation externe (5-9V).
+La carte v2 peut-etre alimenté en usb.
 
 Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) (même UART, mêmes GPIO 16/17).
 
@@ -11,7 +12,6 @@ Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel
 - [MemoireMorte/EspTel](https://github.com/MemoireMorte/EspTel) - client SSH - WS - Telnet
 - [MemoireMorte/minitracker](https://github.com/MemoireMorte/minitracker) - séquenceur 6 pistes
 - [MemoireMorte/3615-Home-Assistant](https://github.com/MemoireMorte/3615-Home-Assistant) - dashboard Home Assistant
-- [iodeo/Minitel-ESP32](https://github.com/iodeo/Minitel-ESP32) - exemples logiciels
 
 ## Vue d'ensemble
 
@@ -42,9 +42,9 @@ Elle est compatible, côté logiciel, avec les exemples du projet [iodeo/Minitel
 | GPIO3 (RXD0) | UART0 RX | Connecteur de programmation J3 |
 | GPIO0 | Bouton **PROG** | Tirage 10 kΩ au 3,3 V + 100 nF, à la masse quand le bouton est appuyé |
 | EN | Bouton **RESET** | Tirage 10 kΩ au 3,3 V + 100 nF |
-| GPIO13 | LED utilisateur (D1) | Active à l'état haut, résistance 220 Ω |
+| GPIO13 | LED utilisateur (v2 seulement) | Active à l'état haut, résistance 220 Ω |
 
-La seconde LED (D2) est le témoin d'alimentation 3,3 V. Les autres GPIO du module ne sont pas câblés.
+La seconde LED est le témoin d'alimentation 3,3 V. Les autres GPIO du module ne sont pas câblés sur la v1, et sont reliés aux pins de chaque coté sur la v2.
 
 ### Connecteur Minitel (J5, 5 broches au bord de la carte)
 
@@ -72,30 +72,23 @@ Sérigraphie : `TX RX 3.3 NC GND`. Les noms sont donnés du point de vue de l'ES
 | 2 | NC | Non connecté |
 | 1 | GND | Masse (pastille carrée) |
 
-### Cavalier d'alimentation (`PowerSource`, 3 broches)
-
-| Position du cavalier | Source |
-|---|---|
-| Centre + côté **Minitel** | Broche 5 de la DIN (alimentation fournie par le Minitel) |
-| Centre + côté **USB** | VBUS du connecteur micro-USB (5 V) |
-
-La broche centrale est l'entrée du régulateur AMS1117-3.3. Le connecteur micro-USB ne sert qu'à l'alimentation : D+ et D− ne sont pas câblés, il n'y a pas de convertisseur USB-série sur la carte.
+### Switch d'alimentation (`PowerSource`, 3 broches)
 
 ## Branchement au Minitel
 
-1. Réaliser un cordon DIN 5 broches mâle vers le connecteur J5, fil à fil (1→1, 2→2, 3→3, 5→5 ; la 4 est inutile).
-2. Placer le cavalier `PowerSource` côté **Minitel**.
+1. Réaliser un cordon DIN 5 broches mâle vers le connecteur J5, fil à fil (1→1, 2→2, 3→3, 5→5 ; la 4 est inutile) ou utilisez un cable MIDI.
+2. Placer le switch `Power Source` côté **Minitel**.
 3. Brancher la DIN à l'arrière du Minitel, puis allumer le Minitel. La LED d'alimentation de la carte doit s'allumer.
 
 Points d'attention :
 
-- **Alimentation par le Minitel** : la broche 5 fournit environ 8,5 V. Le régulateur linéaire dissipe donc la différence (≈ 5 V × le courant consommé) et chauffe lorsque le Wifi est actif. C'est normal, mais éviter de l'enfermer sans aération.
-- Tous les Minitel ne fournissent pas d'alimentation sur la broche 5 (certains Minitel 1 anciens notamment). Dans ce cas, alimenter par micro-USB, cavalier côté **USB**.
-- Ne jamais ponter les trois broches du cavalier : cela relierait le 5 V USB à la sortie d'alimentation du Minitel.
+- **Alimentation par le Minitel** : la broche 5 fournit environ 8,5 V. Le régulateur dissipe donc la différence (≈ 5 V × le courant consommé) et chauffe lorsque le Wifi est actif. C'est normal, mais éviter de l'enfermer sans aération.
+- Tous les Minitel ne fournissent pas d'alimentation sur la broche 5 (certains Minitel 1 anciens notamment). Dans ce cas, alimenter par alimentation externe, switch côté **Ext**.
 
 ## Programmation avec un module FTDI
 
-La carte n'a ni convertisseur USB-série ni circuit d'auto-reset : on programme par l'UART0 avec un adaptateur externe (FTDI FT232, CP2102, CH340…) et on passe en mode bootloader à la main avec les boutons.
+La carte V1 n'a ni convertisseur USB-série ni circuit d'auto-reset : on programme par l'UART0 avec un adaptateur externe (FTDI FT232, CP2102, CH340…) et on passe en mode bootloader à la main avec les boutons.
+La carte V2 dispose d'une UART CH340 reliée directement au port USB et ne nécessite pas de programmeur externe.
 
 ### Câblage
 
@@ -174,37 +167,16 @@ Les croquis du dossier `arduino/` de [iodeo/Minitel-ESP32](https://github.com/io
 
 Le Minitel démarre à 1200 bauds. Les Minitel 1B et suivants acceptent 4800 bauds, les Minitel 2 et suivants 9600 bauds ; `minitel.changeSpeed(4800)` bascule le Minitel et l'UART. Le réglage est perdu à l'extinction du Minitel, d'où l'appel à `searchSpeed()` au démarrage.
 
-## Nomenclature
-
-| Repère | Valeur | Rôle |
-|---|---|---|
-| U3 | ESP32-WROOM-32 | Microcontrôleur |
-| U1 | AMS1117-3.3 | Régulateur 3,3 V |
-| Q1 | 2N2222 (TO-92) | Adaptation de niveau TX → Minitel |
-| R1, R2 | 10 kΩ, 20 kΩ | Polarisation de la base de Q1 |
-| R3 | 56 kΩ | Tirage de la ligne TX Minitel au 3,3 V |
-| R4, R5 | 10 kΩ | Tirages EN et GPIO0 |
-| R6, R7 | 220 Ω | Résistances des LED |
-| C1, C2 | 100 nF | Découplage sortie/entrée du régulateur |
-| C3, C4 | 100 nF | Anti-rebond EN et GPIO0 |
-| D1, D2 | LED 3 mm | LED utilisateur (GPIO13), témoin 3,3 V |
-| SW1, SW3 | Poussoirs CMS | RESET, PROG |
-| J2 | Micro-USB B | Alimentation 5 V |
-| J3 | Barrette 1×5 | Programmation série |
-| J5 | Barrette 1×5 | Liaison Minitel |
-| PowerSource | Barrette 1×3 + cavalier | Choix de la source d'alimentation |
-
-Les références LCSC sont dans `PCB/jlcpcb/production_files/BOM-minitel esp32.csv`.
 
 ## Dépannage
 
 | Symptôme | Piste |
 |---|---|
-| LED d'alimentation éteinte | Position du cavalier `PowerSource` ; présence de tension sur la broche 5 de la DIN |
+| LED d'alimentation éteinte | Position du switch `PowerSource` ; présence de tension sur la broche 5 de la DIN |
 | Téléversement impossible | Séquence PROG/RESET, TX/RX à croiser, masse commune, adaptateur en 3,3 V |
 | Caractères incohérents sur le Minitel | Vitesse ou format (7E1) incorrect ; appeler `searchSpeed()` au démarrage |
 | Rien ne s'affiche, mais le clavier est reçu (ou l'inverse) | Broches 1 et 3 de la DIN inversées dans le cordon |
-| Redémarrages à l'activation du Wifi | Alimentation insuffisante (FTDI seul, câble USB trop fin) |
+| Redémarrages à l'activation du Wifi | Alimentation insuffisante (FTDI seul ?) |
 
 ## Crédits
 
